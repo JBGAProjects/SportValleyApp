@@ -39,3 +39,10 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+
+# Archivos y carpetas creados por Replit
+.replit
+.replit.nix
+.replit.secret
+.replitdb/
