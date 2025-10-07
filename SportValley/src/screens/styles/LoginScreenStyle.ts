@@ -1,65 +1,53 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform, Dimensions } from "react-native";
 
-/**
- * Estilos de LoginScreen
- * ----------------------
- * - Modernos y neutros, adaptados a móvil
- * - Espaciado consistente
- * - Colores legibles y agradables a la vista
- * - Preparado para ScrollView y teclado en móviles
- */
+const { width, height } = Dimensions.get("window"); // Ancho y alto de pantalla
+
 export const styles = StyleSheet.create({
-  // Contenedor principal del ScrollView
   container: {
-    flexGrow: 1, // Permite que el ScrollView ocupe toda la pantalla
-    justifyContent: "center", // Centra verticalmente el contenido
-    alignItems: "center", // Centra horizontalmente
-    paddingHorizontal: 20, // Espacio a los lados
-    paddingTop: 60, // Espacio superior
-    paddingBottom: 40, // Espacio inferior
-    backgroundColor: "#ffffff", // Fondo blanco limpio
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: width * 0.05, // 5% del ancho
+    paddingTop: Platform.OS === "ios" ? height * 0.08 : height * 0.06, // Ajuste superior según SO
+    paddingBottom: height * 0.05,
+    backgroundColor: "#ffffff",
   },
 
-  // Logo de la app
   logo: {
-    width: 120, // Ancho del logo
-    height: 120, // Alto del logo
-    marginBottom: 20, // Separación del título
+    width: Math.min(width * 0.3, 150), // Máximo 150px, 30% del ancho
+    height: Math.min(width * 0.3, 150),
+    marginBottom: 20,
   },
 
-  // Título principal
   title: {
-    fontSize: 24,
+    fontSize: width < 400 ? 22 : 26, // Tamaño adaptativo según ancho pantalla
     fontWeight: "700",
-    color: "#111", // Texto oscuro para contraste
-    marginBottom: 30, // Separación del formulario
+    color: "#111",
+    marginBottom: 30,
     textAlign: "center",
   },
 
-  // Contenedor del formulario
   form: {
-    width: "100%", // Ocupa todo el ancho del ScrollView
+    width: "100%",
+    maxWidth: 400, // Para web, no se estire demasiado
   },
 
-  // Texto "O continúa con"
   orText: {
-    marginVertical: 15, // Separación arriba y abajo
-    fontSize: 14,
-    color: "#555", // Gris neutro
+    marginVertical: 15,
+    fontSize: width < 400 ? 12 : 14,
+    color: "#555",
     textAlign: "center",
   },
 
-  // Texto inferior de registro
   registerText: {
     marginTop: 20,
-    fontSize: 14,
-    color: "#555", // Gris neutro
+    fontSize: width < 400 ? 12 : 14,
+    color: "#555",
     textAlign: "center",
   },
 
-  // Parte del texto que actúa como enlace
   registerLink: {
-    color: "#007BFF", // Azul moderno y llamativo
+    color: "#007BFF",
     fontWeight: "600",
   },
 });

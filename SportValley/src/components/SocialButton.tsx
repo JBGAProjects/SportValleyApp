@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, Image, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, Image, View, StyleSheet, Platform, Dimensions } from 'react-native';
 
 interface SocialButtonProps {
   label: string;
@@ -24,27 +24,37 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
+const { width } = Dimensions.get("window"); // Ancho de pantalla para adaptividad
+
+export const styles = StyleSheet.create({
   button: {
-    width: '100%',
-    paddingVertical: 12,
+    width: "100%", // Siempre ocupará todo el ancho disponible del contenedor
+    maxWidth: 400, // Evita que sea demasiado ancho en pantallas grandes (web)
+    paddingVertical: Platform.OS === "ios" ? 14 : 12, // Ajusta altura según SO
     borderRadius: 10,
     marginVertical: 6,
-    alignItems: 'center',
+    alignItems: "center",
+    flexDirection: "row", // Para alinear icono y texto en fila
+    justifyContent: "center",
   },
+
   content: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
+
   icon: {
-    width: 22,
-    height: 22,
+    width: width < 400 ? 18 : 22, // Tamaño del icono adaptativo
+    height: width < 400 ? 18 : 22,
     marginRight: 10,
+    resizeMode: "contain", // Mantiene proporción del icono
   },
+
   label: {
-    fontSize: 16,
-    color: '#fff',
-    fontWeight: '600',
+    fontSize: width < 400 ? 14 : 16, // Texto más pequeño en pantallas pequeñas
+    color: "#fff", // Color por defecto, se puede sobrescribir con prop
+    fontWeight: "600",
+    textAlign: "center",
   },
 });
