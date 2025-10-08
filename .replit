@@ -10,3 +10,18 @@ externalPort = 3000
 
 [agent]
 expertMode = true
+
+[workflows]
+
+[[workflows.workflow]]
+name = "Arrancar sportValley"
+mode = "sequential"
+author = 33819758
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "Cd SportValley"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx expo start —tunnel"

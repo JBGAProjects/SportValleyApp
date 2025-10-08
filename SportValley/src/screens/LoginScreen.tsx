@@ -84,7 +84,7 @@ export const LoginScreen: React.FC = () => {
       <SocialButton
         label="Facebook"
         icon={facebookIcon}
-        backgroundColor="#1877F2"
+        backgroundColor="#3b5998"
         onPress={() => {}}
       />
 
