@@ -19,7 +19,7 @@ export const useLoginScreenLogic = () => {
     try {
       await login(email, password); // login actualiza isAuthenticated automáticamente
 
-      // Reemplazamos Login por Home en la pila
+      // Reemplazamos Login por Home en la pila al reemplazarlo quita login y no puede volver atrás con el botón back
       navigation.replace("Home");
     } catch (error) {
       console.error("Error login:", error);
@@ -29,6 +29,10 @@ export const useLoginScreenLogic = () => {
     }
   };
 
+  const handleRegister = () => {
+    navigation.navigate("Register");
+  };
+
   return {
     email,
     setEmail,
@@ -36,5 +40,6 @@ export const useLoginScreenLogic = () => {
     setPassword,
     loading,
     handleLogin,
+    handleRegister,
   };
 };

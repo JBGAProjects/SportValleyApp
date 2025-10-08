@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import HomeScreen from '../screens/HomeScreen';
 import { LoginScreen } from '../screens/LoginScreen/LoginScreen';
 import { RootStackParamList } from './RootStackParams';
+import { RegisterScreen } from '../screens/RegisterScreen/RegisterScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,6 +18,7 @@ const AppNavigator = () => {
         {/* Siempre agregamos ambas pantallas */}
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

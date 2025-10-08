@@ -17,7 +17,7 @@ import { useLoginScreenLogic } from "./LoginScreenLogic";
  *
  */
 export const LoginScreen: React.FC = () => {
-  const { email, setEmail, password, setPassword, loading, handleLogin } =
+  const { email, setEmail, password, setPassword, loading, handleLogin, handleRegister } =
     useLoginScreenLogic(); // Conectamos la lógica del login
 
   // Iconos temporales (Google / Facebook)
@@ -84,7 +84,7 @@ export const LoginScreen: React.FC = () => {
       {/* Enlace de registro */}
       <Text style={styles.registerText}>
         ¿No tienes cuenta?{" "}
-        <Text style={styles.registerLink} onPress={() => {}}>
+        <Text style={styles.registerLink} onPress={handleRegister}>
           Regístrate
         </Text>
       </Text>
