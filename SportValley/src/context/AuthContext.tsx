@@ -2,6 +2,8 @@ import React, { createContext, useState, useEffect, ReactNode, useContext } from
 import { api } from '../api/apiClient'; // Cliente HTTP robusto
 import { saveToken, getToken, deleteToken } from '../services/secureStore';
 import { Alert } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/RootStackParams';
 
 /**
  * AuthContext.tsx
@@ -9,7 +11,7 @@ import { Alert } from 'react-native';
  * Proporciona un contexto global de autenticación para toda la app.
  * Funciones principales:
  * - login: autenticar usuario y guardar token
- * - logout: cerrar sesión y borrar token
+ * - logout: cerrar sesión, borrar token y navegar a Login
  * - isAuthenticated: indica si el usuario está logueado
  * - user: datos del usuario actual
  *
@@ -27,9 +29,9 @@ interface User {
 /** Forma del contexto de autenticación */
 interface AuthContextData {
   isAuthenticated: boolean;                  // Estado global de login
-  user: User | null;                          // Usuario actualmente logueado
+  user: User | null;                         // Usuario actualmente logueado
   login: (email: string, password: string) => Promise<void>; // Función login
-  logout: () => void;                        // Función logout
+  logout: (navigation?: NativeStackNavigationProp<RootStackParamList>) => void; // Función logout con navegación opcional
 }
 
 /** Contexto con TypeScript */
@@ -101,11 +103,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
    * logout
    * - Borra token seguro
    * - Limpia usuario y estado de autenticación
+   * - Opcionalmente reinicia la pila de navegación hacia LoginScreen
    */
-  const logout = async () => {
+  const logout = async (navigation?: NativeStackNavigationProp<RootStackParamList>) => {
     await deleteToken('accessToken'); // Borra token del dispositivo
     setUser(null);                     // Limpiar usuario
     setIsAuthenticated(false);         // Marcar como no autenticado
+
+    if (navigation) {
+      // Resetea la pila y deja solo LoginScreen
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    }
   };
 
   /** Proporciona contexto a toda la app */

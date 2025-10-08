@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PrimaryButton } from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/RootStackParams';
 
 /**
  * HomeScreen.tsx
@@ -14,7 +17,7 @@ import { useAuth } from '../context/AuthContext';
 
 const HomeScreen = () => {
   const { user, logout } = useAuth(); // Obtenemos usuario y función de logout
-
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>
@@ -27,7 +30,7 @@ const HomeScreen = () => {
 
       <PrimaryButton
         label="Cerrar sesión"
-        onPress={() => logout()} // Cierra sesión y vuelve a LoginScreen
+          onPress={() => logout(navigation)}// Cierra sesión y vuelve a LoginScreen
       />
     </View>
   );

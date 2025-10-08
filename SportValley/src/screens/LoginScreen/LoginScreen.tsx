@@ -1,20 +1,20 @@
+
+// Importamos el hook con la lógica
 import React from "react";
 import { View, Text, Image, ScrollView } from "react-native";
-import { InputField } from "../components/InputField";
-import { PrimaryButton } from "../components/PrimaryButton";
-import { SocialButton } from "../components/SocialButton";
-import { styles } from "./styles/LoginScreenStyle";
+import { InputField } from "../../components/InputField";
+import { PrimaryButton } from "../../components/PrimaryButton";
+import { SocialButton } from "../../components/SocialButton";
+import { styles } from "../styles/LoginScreenStyle";
 import { useLoginScreenLogic } from "./LoginScreenLogic";
-// Importamos el hook con la lógica
 
 /**
- * 🧭 Pantalla de Login
+ * Pantalla de Login
  *
  * Esta pantalla permite al usuario iniciar sesión con:
  * - Correo y contraseña (formulario clásico)
  * - Google o Facebook (aún sin lógica)
  *
- * El diseño es moderno, neutro y preparado para móvil.
  */
 export const LoginScreen: React.FC = () => {
   const { email, setEmail, password, setPassword, loading, handleLogin } =
@@ -29,18 +29,18 @@ export const LoginScreen: React.FC = () => {
   };
 
   // Logo temporal de deportes
-  const tempLogo = require("../../assets/logoApp.png");
+  const tempLogo = require("../../../assets/logoApp.png");
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 🏟️ Logo temporal de la app */}
+      {/* Logo temporal de la app */}
       <Image
         source={tempLogo}
         style={styles.logo}
         resizeMode="contain" // Mantiene proporción del logo
       />
 
-      {/* 🧾 Formulario de login */}
+      {/* Formulario de login */}
       <View style={styles.form}>
         {/* Inputs controlados por el hook */}
         <InputField
@@ -64,10 +64,10 @@ export const LoginScreen: React.FC = () => {
         />
       </View>
 
-      {/* 🔗 Separador */}
+      {/* Separador */}
       <Text style={styles.orText}>O continúa con</Text>
 
-      {/* 🔘 Botones sociales (sin lógica aún) */}
+      {/* Botones sociales (sin lógica aún) */}
       <SocialButton
         label="Google"
         icon={googleIcon}
@@ -81,7 +81,7 @@ export const LoginScreen: React.FC = () => {
         onPress={() => {}}
       />
 
-      {/* 📩 Enlace de registro */}
+      {/* Enlace de registro */}
       <Text style={styles.registerText}>
         ¿No tienes cuenta?{" "}
         <Text style={styles.registerLink} onPress={() => {}}>
