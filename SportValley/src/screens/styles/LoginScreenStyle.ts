@@ -7,41 +7,39 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: width * 0.05, // 5% del ancho
-    paddingTop: Platform.OS === "ios" ? height * 0.08 : height * 0.06, // Ajuste superior según SO
+    paddingHorizontal: width * 0.05,
+    paddingTop:
+      Platform.OS === "ios"
+        ? height * 0.08
+        : Platform.OS === "web"
+          ? height * 0.1
+          : height * 0.06, // web más espacio arriba
     paddingBottom: height * 0.05,
+    minHeight: height, // evita scroll vertical innecesario
     backgroundColor: "#ffffff",
   },
 
   logo: {
-    width: Math.min(width * 0.3, 150), // Máximo 150px, 30% del ancho
-    height: Math.min(width * 0.3, 150),
-    marginBottom: 20,
-  },
-
-  title: {
-    fontSize: width < 400 ? 22 : 26, // Tamaño adaptativo según ancho pantalla
-    fontWeight: "700",
-    color: "#111",
-    marginBottom: 30,
-    textAlign: "center",
+    width: Math.min(width * 0.8, 300),
+    height: Math.min(width * 0.8, 300),
+    marginBottom: Platform.OS === "web" ? 40 : 20, // más espacio en web
   },
 
   form: {
     width: "100%",
-    maxWidth: 400, // Para web, no se estire demasiado
+    maxWidth: 400,
+    alignSelf: "center", // centrado horizontal
   },
 
   orText: {
     marginVertical: 15,
-    fontSize: width < 400 ? 12 : 14,
+    fontSize: Math.min(width < 400 ? 12 : 14, 16),
     color: "#555",
     textAlign: "center",
   },
-
   registerText: {
     marginTop: 20,
-    fontSize: width < 400 ? 12 : 14,
+    fontSize: Math.min(width < 400 ? 12 : 14, 16),
     color: "#555",
     textAlign: "center",
   },
