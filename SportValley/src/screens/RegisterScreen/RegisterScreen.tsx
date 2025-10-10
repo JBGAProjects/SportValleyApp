@@ -1,4 +1,3 @@
-// src/screens/Register/RegisterScreen.tsx
 import React from "react";
 import {
   ScrollView,
@@ -16,24 +15,108 @@ import { registerStyles } from "./RegisterScreenStyle";
 import { useRegisterLogic } from "./RegisterScreenLogic";
 import { Logos } from "../../utils/constants/images";
 
-// Componente para mostrar reglas de contraseña
-const PasswordRule = ({
-  isValid,
-  text,
+// NOTA: Si usas react-native-vector-icons, agrégalo aquí:
+// import Icon from "react-native-vector-icons/Ionicons";
+
+// Componente para mostrar el resumen de las reglas y el tooltip con el icono 'i'
+const PasswordInfo = ({
+  passwordRules,
 }: {
-  isValid: boolean;
-  text: string;
-}) => (
-  <Text
-    style={{
-      fontSize: 14,
-      color: isValid ? "#28A745" : "#D32F2F",
-      marginBottom: 4,
-    }}
-  >
-    {isValid ? "✅" : "❌"} {text}
-  </Text>
-);
+  passwordRules: {
+    minLength: boolean;
+    uppercase: boolean;
+    lowercase: boolean;
+    number: boolean;
+    specialChar: boolean;
+  };
+}) => {
+  const [showDetails, setShowDetails] = React.useState(false);
+
+  // Determinar si TODAS las reglas son válidas
+  const allValid = Object.values(passwordRules).every((v) => v);
+
+  // No mostrar nada si todas son válidas
+  if (allValid) {
+    return null;
+  }
+
+  // Reglas para mostrar en el tooltip
+  const ruleTexts = [
+    { text: "Mínimo 8 caracteres", valid: passwordRules.minLength },
+    { text: "Al menos una mayúscula", valid: passwordRules.uppercase },
+    { text: "Al menos una minúscula", valid: passwordRules.lowercase },
+    { text: "Al menos un número", valid: passwordRules.number },
+    { text: "Al menos un símbolo", valid: passwordRules.specialChar },
+  ];
+
+  return (
+    <View style={{ marginBottom: 20 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 5,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            color: "#D32F2F", // Color de error
+            marginRight: 8,
+            fontWeight: "bold",
+          }}
+        >
+          ❌ No cumple con los requisitos de la contraseña
+        </Text>
+        <TouchableOpacity
+          onPress={() => setShowDetails(!showDetails)}
+          style={{
+            width: 20,
+            height: 20,
+            borderRadius: 10,
+            backgroundColor: "#D32F2F", // Fondo rojo para el 'i'
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          activeOpacity={0.8}
+        >
+          {/* Usamos 'i' como fallback, reemplaza con un Icono si usas una librería */}
+          <Text style={{ color: "#fff", fontSize: 12, fontWeight: "bold" }}>
+            i
+          </Text>
+          {/* Ejemplo con Ionicons: <Icon name="information-circle-outline" size={16} color="#fff" /> */}
+        </TouchableOpacity>
+      </View>
+
+      {/* Tooltip/Detalles que se muestran al presionar el icono 'i' */}
+      {showDetails && (
+        <View
+          style={{
+            marginTop: 5,
+            padding: 10,
+            backgroundColor: "#FFF",
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: "#D32F2F",
+          }}
+        >
+          {ruleTexts.map((rule, index) => (
+            <Text
+              key={index}
+              style={{
+                fontSize: 14,
+                color: rule.valid ? "#28A745" : "#D32F2F",
+                marginBottom: 2,
+              }}
+            >
+              {rule.valid ? "✅" : "❌"} {rule.text}
+            </Text>
+          ))}
+        </View>
+      )}
+    </View>
+  );
+};
 
 export const RegisterScreen: React.FC = () => {
   const {
@@ -132,7 +215,7 @@ export const RegisterScreen: React.FC = () => {
     </>
   );
 
-  // --- Paso 2 ---
+  // --- Paso 2 --- (MODIFICADO)
   const renderStep2 = () => (
     <>
       <Text style={registerStyles.title}>2. Cuenta y Seguridad</Text>
@@ -151,28 +234,8 @@ export const RegisterScreen: React.FC = () => {
         onChangeText={setPassword}
       />
 
-      <View style={{ marginBottom: 20 }}>
-        <PasswordRule
-          isValid={passwordRules.minLength}
-          text="Mínimo 8 caracteres"
-        />
-        <PasswordRule
-          isValid={passwordRules.uppercase}
-          text="Al menos una mayúscula"
-        />
-        <PasswordRule
-          isValid={passwordRules.lowercase}
-          text="Al menos una minúscula"
-        />
-        <PasswordRule
-          isValid={passwordRules.number}
-          text="Al menos un número"
-        />
-        <PasswordRule
-          isValid={passwordRules.specialChar}
-          text="Al menos un símbolo"
-        />
-      </View>
+      {/* Nuevo componente para la validación de la contraseña en una sola línea y tooltip */}
+      <PasswordInfo passwordRules={passwordRules} />
 
       <InputField
         placeholder="Confirmar contraseña"
