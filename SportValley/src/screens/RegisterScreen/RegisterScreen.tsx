@@ -1,12 +1,22 @@
+// src/screens/Register/RegisterScreen.tsx
 import React from "react";
-import { ScrollView, View, Text, Image, Platform } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  Platform,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { InputField } from "../../components/InputField";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { registerStyles } from "./RegisterScreenStyle";
 import { useRegisterLogic } from "./RegisterScreenLogic";
 import { Logos } from "../../utils/constants/images";
 
-// Componente para mostrar las reglas de contraseña de forma limpia
+// Componente para mostrar reglas de contraseña
 const PasswordRule = ({
   isValid,
   text,
@@ -28,24 +38,27 @@ const PasswordRule = ({
 export const RegisterScreen: React.FC = () => {
   const {
     currentStep,
-    // CAMBIO: firstName y lastName en lugar de fullName
     firstName,
     setFirstName,
     lastName,
     setLastName,
     country,
     setCountry,
+    phonePrefix,
+    setPhonePrefix,
+    phoneNumber,
+    setPhoneNumber,
     email,
     setEmail,
     password,
     setPassword,
     confirmPassword,
     setConfirmPassword,
-    phonePrefix,
-    setPhonePrefix,
-    phoneNumber,
-    setPhoneNumber,
     passwordRules,
+    favoriteSport,
+    setFavoriteSport,
+    gender,
+    setGender,
     loading,
     handleRegister,
     handleGoBack,
@@ -53,29 +66,32 @@ export const RegisterScreen: React.FC = () => {
     errors,
   } = useRegisterLogic();
 
-  // ----------------------------------------------------
-  // Renderizado del Paso 1: Datos Personales
-  // ----------------------------------------------------
+  const deportes = [
+    "Fútbol",
+    "Baloncesto",
+    "Tenis",
+    "Voleibol",
+    "Ecuavoley",
+    "Ping Pong",
+  ];
+
+  // --- Paso 1 ---
   const renderStep1 = () => (
     <>
       <Text style={registerStyles.title}>1. Datos Personales</Text>
 
-      {/* Nombre (Nuevo campo) */}
       <InputField
         placeholder="Nombre"
         value={firstName}
         onChangeText={setFirstName}
         error={errors.firstName}
       />
-      {/* Apellidos (Nuevo campo) */}
       <InputField
         placeholder="Apellidos"
         value={lastName}
         onChangeText={setLastName}
         error={errors.lastName}
       />
-
-      {/* País de residencia */}
       <InputField
         placeholder="País de residencia"
         value={country}
@@ -83,7 +99,6 @@ export const RegisterScreen: React.FC = () => {
         error={errors.country}
       />
 
-      {/* Prefijo + Teléfono */}
       <View
         style={{
           flexDirection: "row",
@@ -117,14 +132,11 @@ export const RegisterScreen: React.FC = () => {
     </>
   );
 
-  // ----------------------------------------------------
-  // Renderizado del Paso 2: Cuenta y Seguridad (sin cambios)
-  // ----------------------------------------------------
+  // --- Paso 2 ---
   const renderStep2 = () => (
     <>
       <Text style={registerStyles.title}>2. Cuenta y Seguridad</Text>
 
-      {/* Email */}
       <InputField
         placeholder="Correo electrónico"
         keyboardType="email-address"
@@ -132,8 +144,6 @@ export const RegisterScreen: React.FC = () => {
         onChangeText={setEmail}
         error={errors.email}
       />
-
-      {/* Contraseña */}
       <InputField
         placeholder="Contraseña"
         secureTextEntry
@@ -141,7 +151,6 @@ export const RegisterScreen: React.FC = () => {
         onChangeText={setPassword}
       />
 
-      {/* Reglas de Contraseña */}
       <View style={{ marginBottom: 20 }}>
         <PasswordRule
           isValid={passwordRules.minLength}
@@ -165,7 +174,6 @@ export const RegisterScreen: React.FC = () => {
         />
       </View>
 
-      {/* Confirmar contraseña */}
       <InputField
         placeholder="Confirmar contraseña"
         secureTextEntry
@@ -175,34 +183,127 @@ export const RegisterScreen: React.FC = () => {
       />
 
       <PrimaryButton
-        label={loading ? "Registrando..." : "Registrarse"}
-        onPress={handleRegister}
+        label="Siguiente"
+        onPress={handleNextStep}
         style={{ marginTop: 20 }}
       />
     </>
   );
 
-  // ----------------------------------------------------
-  // Renderizado principal (sin cambios)
-  // ----------------------------------------------------
-  return (
-    <ScrollView contentContainerStyle={registerStyles.container}>
-      <Image
-        source={Logos.sportValley}
-        style={registerStyles.logo}
-        resizeMode="contain"
-      />
+  // --- Paso 3 ---
+  const renderStep3 = () => (
+    <>
+      <Text style={registerStyles.title}>3. Preferencias</Text>
 
-      <View style={registerStyles.form}>
-        {currentStep === 1 ? renderStep1() : renderStep2()}
+      {/* Selector de Sexo */}
+      <Text style={registerStyles.pickerLabel}>Sexo:</Text>
+      {Platform.OS === "web" ? (
+        <select
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          style={registerStyles.webPicker}
+        >
+          <option value="">Selecciona tu sexo...</option>
+          <option value="male">Masculino</option>
+          <option value="female">Femenino</option>
+          <option value="other">Prefiero no decir</option>
+        </select>
+      ) : (
+        <View style={registerStyles.pickerContainer}>
+          <Picker
+            selectedValue={gender}
+            onValueChange={(val) => setGender(val)}
+            mode="dropdown"
+            style={registerStyles.picker}
+          >
+            <Picker.Item label="Selecciona tu sexo..." value="" />
+            <Picker.Item label="Masculino" value="male" />
+            <Picker.Item label="Femenino" value="female" />
+            <Picker.Item label="Prefiero no decir" value="other" />
+          </Picker>
+        </View>
+      )}
+      {errors.gender && (
+        <Text style={registerStyles.errorText}>{errors.gender}</Text>
+      )}
+
+      {/* Selector de Deporte */}
+      <Text style={registerStyles.pickerLabel}>Deporte preferido:</Text>
+      <View style={registerStyles.optionsContainer}>
+        {deportes.map((d) => {
+          const selected = favoriteSport === d;
+          return (
+            <TouchableOpacity
+              key={d}
+              activeOpacity={0.8}
+              onPress={() => setFavoriteSport(d)}
+              style={[
+                registerStyles.optionButton,
+                selected && registerStyles.optionButtonSelected,
+              ]}
+            >
+              <Text
+                style={[
+                  registerStyles.optionText,
+                  selected && registerStyles.optionTextSelected,
+                ]}
+              >
+                {d}
+              </Text>
+            </TouchableOpacity>
+          );
+        })}
       </View>
+      {errors.favoriteSport && (
+        <Text style={registerStyles.errorText}>{errors.favoriteSport}</Text>
+      )}
 
-      <Text style={registerStyles.loginText}>
-        {currentStep === 2 ? "Volver atrás o " : "¿Ya tienes cuenta? "}
-        <Text style={registerStyles.loginLink} onPress={handleGoBack}>
-          {currentStep === 2 ? "Editar datos" : "Inicia sesión"}
+      <PrimaryButton
+        label={loading ? "Creando cuenta..." : "Crear cuenta"}
+        onPress={handleRegister}
+        style={{ marginTop: 30 }}
+      />
+    </>
+  );
+
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return renderStep1();
+      case 2:
+        return renderStep2();
+      case 3:
+        return renderStep3();
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={registerStyles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Image
+          source={Logos.sportValley}
+          style={registerStyles.logo}
+          resizeMode="contain"
+        />
+
+        <View style={registerStyles.form}>{renderCurrentStep()}</View>
+
+        <Text style={registerStyles.loginText}>
+          {currentStep > 1 ? "Volver atrás o " : "¿Ya tienes cuenta? "}
+          <Text style={registerStyles.loginLink} onPress={handleGoBack}>
+            {currentStep > 1 ? "Editar datos" : "Inicia sesión"}
+          </Text>
         </Text>
-      </Text>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };

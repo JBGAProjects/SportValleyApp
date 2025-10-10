@@ -1,5 +1,4 @@
-// src/screens/Register/registerStyles.ts
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import {
   COLORS,
   FONTS,
@@ -15,7 +14,8 @@ export const registerStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: SCREEN.width * 0.05,
-    paddingTop: SCREEN.isIOS ? SCREEN.height * 0.08 : SCREEN.height * 0.06,
+    paddingTop:
+      Platform.OS === "ios" ? SCREEN.height * 0.08 : SCREEN.height * 0.06,
     backgroundColor: COLORS.background,
   },
 
@@ -38,7 +38,6 @@ export const registerStyles = StyleSheet.create({
     maxWidth: 400,
   },
 
-  // Texto de login/volver atrás
   loginText: {
     marginTop: SPACING.lg,
     fontSize: FONTS.md,
@@ -47,11 +46,61 @@ export const registerStyles = StyleSheet.create({
   },
 
   loginLink: {
-    color: COLORS.secondary, // azul como el "Regístrate"
+    color: COLORS.secondary, // azul como "Regístrate"
     fontWeight: "700",
   },
 
-  // Contenedor de opciones tipo selector (sexo / deporte)
+  pickerLabel: {
+    fontSize: 16,
+    color: "#666",
+    marginBottom: 5,
+    marginLeft: 5,
+  },
+
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: RADIUS.md,
+    marginBottom: 20,
+    backgroundColor: "#fff",
+    overflow: Platform.OS === "android" ? "hidden" : "visible",
+    height: 50,
+    justifyContent: "center",
+  },
+
+  picker: {
+    width: "100%",
+    height: 50,
+    color: "#000",
+  },
+
+  webPicker: {
+    width: "100%",
+    height: 52, // Igual que InputField
+    paddingHorizontal: SPACING.md,
+    paddingVertical: 12,
+    fontSize: FONTS.md,
+    borderRadius: RADIUS.md,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.background,
+    color: COLORS.textPrimary,
+    marginBottom: SPACING.lg,
+  },
+
+  errorBorder: {
+    borderColor: "#D32F2F",
+    borderWidth: 2,
+  },
+
+  errorText: {
+    color: "#D32F2F",
+    fontSize: 12,
+    marginTop: -15,
+    marginBottom: 20,
+    marginLeft: 5,
+  },
+
   optionsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -75,7 +124,7 @@ export const registerStyles = StyleSheet.create({
 
   optionButtonSelected: {
     borderColor: COLORS.secondary,
-    backgroundColor: COLORS.secondary + "20", // azul claro transparente
+    backgroundColor: COLORS.secondary + "20",
   },
 
   optionText: {

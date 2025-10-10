@@ -4,36 +4,20 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/RootStackParams";
 import { useAuth } from "../../context/AuthContext";
 
-/**
- * Hook para registro con validación avanzada de contraseña y flujo de dos pasos.
- */
 export const useRegisterLogic = () => {
-  // Estado de los pasos
   const [currentStep, setCurrentStep] = useState(1);
-  const [country, setCountry] = useState("España");
 
-  // Campos del formulario
+  // Paso 1
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [country, setCountry] = useState("España");
+  const [phonePrefix, setPhonePrefix] = useState("+34");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  // Paso 2
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [phonePrefix, setPhonePrefix] = useState("+34");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // Validación de campos
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    country: "",
-    email: "",
-    confirmPassword: "",
-    phoneNumber: "",
-    phonePrefix: "",
-  });
-
-  // Validaciones avanzadas de contraseña
   const [passwordRules, setPasswordRules] = useState({
     minLength: false,
     uppercase: false,
@@ -42,11 +26,18 @@ export const useRegisterLogic = () => {
     specialChar: false,
   });
 
+  // Paso 3
+  const [favoriteSport, setFavoriteSport] = useState("");
+  const [gender, setGender] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<any>({});
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { login } = useAuth();
 
-  // Validación en tiempo real de la contraseña
+  // Validación de contraseña en tiempo real
   useEffect(() => {
     setPasswordRules({
       minLength: password.length >= 8,
@@ -57,72 +48,69 @@ export const useRegisterLogic = () => {
     });
   }, [password]);
 
-  // Validadores específicos
   const validateStep1 = () => {
-    const step1Errors = {
-      firstName: firstName ? "" : "El nombre es obligatorio.",
-      lastName: lastName ? "" : "Los apellidos son obligatorios.",
-      country: country ? "" : "El país es obligatorio.",
-      phoneNumber: phoneNumber ? "" : "Número de teléfono requerido.",
-      phonePrefix: phonePrefix ? "" : "Prefijo requerido.",
+    const stepErrors = {
+      firstName: firstName ? "" : "Nombre obligatorio",
+      lastName: lastName ? "" : "Apellido obligatorio",
+      country: country ? "" : "País obligatorio",
+      phonePrefix: phonePrefix ? "" : "Prefijo obligatorio",
+      phoneNumber: phoneNumber ? "" : "Número obligatorio",
     };
-    setErrors((prev) => ({ ...prev, ...step1Errors }));
-    return Object.values(step1Errors).every((err) => err === "");
+    setErrors((prev: any) => ({ ...prev, ...stepErrors }));
+    return Object.values(stepErrors).every((e) => e === "");
   };
 
   const validateStep2 = () => {
-    const step2Errors = {
-      email: email.includes("@") ? "" : "Correo electrónico inválido.",
+    const stepErrors = {
+      email: email.includes("@") ? "" : "Correo inválido",
       confirmPassword:
-        password === confirmPassword ? "" : "Las contraseñas no coinciden.",
+        password === confirmPassword ? "" : "Contraseñas no coinciden",
     };
+    setErrors((prev: any) => ({ ...prev, ...stepErrors }));
+    const passwordValid = Object.values(passwordRules).every((v) => v);
+    return Object.values(stepErrors).every((e) => e === "") && passwordValid;
+  };
 
-    setErrors((prev) => ({ ...prev, ...step2Errors }));
-    const passwordValid = Object.values(passwordRules).every((rule) => rule);
-
-    return (
-      Object.values(step2Errors).every((err) => err === "") && passwordValid
-    );
+  const validateStep3 = () => {
+    const stepErrors = {
+      favoriteSport: favoriteSport ? "" : "Selecciona un deporte",
+      gender: gender ? "" : "Selecciona un sexo",
+    };
+    setErrors((prev: any) => ({ ...prev, ...stepErrors }));
+    return Object.values(stepErrors).every((e) => e === "");
   };
 
   const handleNextStep = () => {
-    if (currentStep === 1) {
-      if (validateStep1()) {
-        setCurrentStep(2);
-      }
-    }
+    if (currentStep === 1 && validateStep1()) setCurrentStep(2);
+    if (currentStep === 2 && validateStep2()) setCurrentStep(3);
   };
 
   const handleRegister = async () => {
-    if (currentStep === 2) {
-      if (!validateStep2()) return;
-
-      setLoading(true);
-      try {
-        console.log(
-          "Registrando usuario:",
-          firstName,
-          lastName,
-          email,
-          phonePrefix + phoneNumber
-        );
-
-        await login(email, password);
-        navigation.replace("Home");
-      } catch (error) {
-        console.error("Error en registro:", error);
-      } finally {
-        setLoading(false);
-      }
+    if (!validateStep3()) return;
+    setLoading(true);
+    try {
+      console.log("Registrando usuario:", {
+        firstName,
+        lastName,
+        email,
+        phonePrefix,
+        phoneNumber,
+        favoriteSport,
+        gender,
+      });
+      await login(email, password);
+      navigation.replace("Home");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGoBack = () => {
-    if (currentStep === 2) {
-      setCurrentStep(1);
-    } else {
-      navigation.navigate("Login");
-    }
+    if (currentStep === 3) setCurrentStep(2);
+    else if (currentStep === 2) setCurrentStep(1);
+    else navigation.navigate("Login");
   };
 
   return {
@@ -133,21 +121,25 @@ export const useRegisterLogic = () => {
     setLastName,
     country,
     setCountry,
+    phonePrefix,
+    setPhonePrefix,
+    phoneNumber,
+    setPhoneNumber,
     email,
     setEmail,
     password,
     setPassword,
     confirmPassword,
     setConfirmPassword,
-    phonePrefix,
-    setPhonePrefix,
-    phoneNumber,
-    setPhoneNumber,
     passwordRules,
+    favoriteSport,
+    setFavoriteSport,
+    gender,
+    setGender,
     loading,
+    errors,
+    handleNextStep,
     handleRegister,
     handleGoBack,
-    handleNextStep,
-    errors,
   };
 };
