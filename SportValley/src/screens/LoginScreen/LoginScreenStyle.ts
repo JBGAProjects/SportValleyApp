@@ -8,7 +8,7 @@ export const loginStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: SCREEN.width * 0.05,
-    paddingTop: SCREEN.isIOS ? SCREEN.height * 0.08 : SCREEN.height * 0.06,
+    paddingTop: SCREEN.isIOS ? SCREEN.height * 0.0 : SCREEN.height * 0.0,
     backgroundColor: COLORS.background,
   },
 

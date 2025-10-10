@@ -1,6 +1,13 @@
 // LoginScreen.tsx
 import React from "react";
-import { View, Text, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { InputField } from "../../components/InputField";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { SocialButton } from "../../components/SocialButton";
@@ -27,7 +34,7 @@ export const LoginScreen: React.FC = () => {
     handleLogin,
     handleRegister,
     handleForgotPassword,
-  } = useLoginScreenLogic(); // Conectamos la lógica del login
+  } = useLoginScreenLogic();
 
   const navigation = useNavigation();
 
@@ -40,67 +47,79 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={loginStyles.container}>
-      {/* Logo */}
-      <Image
-        source={Logos.sportValley}
-        style={loginStyles.logo}
-        resizeMode="contain"
-      />
-
-      {/* Formulario */}
-      <View style={loginStyles.form}>
-        <InputField
-          placeholder="Correo electrónico"
-          keyboardType="email-address"
-          value={email}
-          onChangeText={setEmail}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={loginStyles.container}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Logo */}
+        <Image
+          source={Logos.sportValley}
+          style={loginStyles.logo}
+          resizeMode="contain"
         />
 
-        <InputField
-          placeholder="Contraseña"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+        {/* Formulario */}
+        <View style={loginStyles.form}>
+          <InputField
+            placeholder="Correo electrónico"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+
+          <InputField
+            placeholder="Contraseña"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+
+          {/* Link de recuperar contraseña */}
+          <Text
+            style={loginStyles.forgotPassword}
+            onPress={handleForgotPassword}
+          >
+            ¿Has olvidado la contraseña?
+          </Text>
+
+          {/* Botón de login */}
+          <PrimaryButton
+            label={loading ? "Cargando..." : "Iniciar sesión"}
+            onPress={handleLogin}
+            disabled={loading}
+          />
+        </View>
+
+        {/* Separador */}
+        <Text style={loginStyles.orText}>O continúa con</Text>
+
+        {/* Botones sociales */}
+        <SocialButton
+          label="Google"
+          icon={googleIcon}
+          backgroundColor="#EA6055"
+          onPress={() => {}}
+        />
+        <SocialButton
+          label="Facebook"
+          icon={facebookIcon}
+          backgroundColor="#4E7FFF"
+          onPress={() => {}}
         />
 
-        {/* Link de recuperar contraseña */}
-        <Text style={loginStyles.forgotPassword} onPress={handleForgotPassword}>
-          ¿Has olvidado la contraseña?
+        {/* Enlace de registro */}
+        <Text style={loginStyles.registerText}>
+          ¿No tienes cuenta?{" "}
+          <Text style={loginStyles.registerLink} onPress={handleRegister}>
+            Regístrate
+          </Text>
         </Text>
-
-        {/* Botón de login */}
-        <PrimaryButton
-          label={loading ? "Cargando..." : "Iniciar sesión"}
-          onPress={handleLogin}
-          disabled={loading}
-        />
-      </View>
-
-      {/* Separador */}
-      <Text style={loginStyles.orText}>O continúa con</Text>
-
-      {/* Botones sociales */}
-      <SocialButton
-        label="Google"
-        icon={googleIcon}
-        backgroundColor="#EA6055"
-        onPress={() => {}}
-      />
-      <SocialButton
-        label="Facebook"
-        icon={facebookIcon}
-        backgroundColor="#4E7FFF"
-        onPress={() => {}}
-      />
-
-      {/* Enlace de registro */}
-      <Text style={loginStyles.registerText}>
-        ¿No tienes cuenta?{" "}
-        <Text style={loginStyles.registerLink} onPress={handleRegister}>
-          Regístrate
-        </Text>
-      </Text>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };

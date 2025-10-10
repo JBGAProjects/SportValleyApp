@@ -15,7 +15,7 @@ export const registerStyles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: SCREEN.width * 0.05,
     paddingTop:
-      Platform.OS === "ios" ? SCREEN.height * 0.08 : SCREEN.height * 0.06,
+      Platform.OS === "ios" ? SCREEN.height * 0.0 : SCREEN.height * 0.0,
     backgroundColor: COLORS.background,
   },
 
