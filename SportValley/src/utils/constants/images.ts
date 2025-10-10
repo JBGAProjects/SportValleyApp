@@ -5,7 +5,7 @@
  */
 
 export const Logos = {
-  sportValley: require("../../../assets/logoApp.png"),
+  sportValley: require("../../../assets/logoSportValley.png"),
 };
 
 export const Icons = {

@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useAuth } from "../../context/AuthContext";
 import { RootStackParamList } from "../../navigation/RootStackParams";
+import { useAuth } from "../../context/AuthContext";
 
 /**
- * 🎯 Hook para registro con validación avanzada de contraseña
+ * Hook para registro con validación avanzada de contraseña y flujo de dos pasos.
  */
 export const useRegisterLogic = () => {
-  const [fullName, setFullName] = useState("");
+  // Estado de los pasos
+  const [currentStep, setCurrentStep] = useState(1);
+  const [country, setCountry] = useState("España");
+
+  // Campos del formulario
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,10 +24,13 @@ export const useRegisterLogic = () => {
 
   // Validación de campos
   const [errors, setErrors] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
+    country: "",
     email: "",
     confirmPassword: "",
     phoneNumber: "",
+    phonePrefix: "",
   });
 
   // Validaciones avanzadas de contraseña
@@ -37,7 +46,7 @@ export const useRegisterLogic = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { login } = useAuth();
 
-  // 🔴 Validación en tiempo real de la contraseña
+  // Validación en tiempo real de la contraseña
   useEffect(() => {
     setPasswordRules({
       minLength: password.length >= 8,
@@ -48,49 +57,82 @@ export const useRegisterLogic = () => {
     });
   }, [password]);
 
-  // Validación general de campos al enviar
-  const validateFields = () => {
-    const newErrors = {
-      fullName: fullName ? "" : "El nombre es obligatorio.",
+  // Validadores específicos
+  const validateStep1 = () => {
+    const step1Errors = {
+      firstName: firstName ? "" : "El nombre es obligatorio.",
+      lastName: lastName ? "" : "Los apellidos son obligatorios.",
+      country: country ? "" : "El país es obligatorio.",
+      phoneNumber: phoneNumber ? "" : "Número de teléfono requerido.",
+      phonePrefix: phonePrefix ? "" : "Prefijo requerido.",
+    };
+    setErrors((prev) => ({ ...prev, ...step1Errors }));
+    return Object.values(step1Errors).every((err) => err === "");
+  };
+
+  const validateStep2 = () => {
+    const step2Errors = {
       email: email.includes("@") ? "" : "Correo electrónico inválido.",
       confirmPassword:
         password === confirmPassword ? "" : "Las contraseñas no coinciden.",
-      phoneNumber: phoneNumber ? "" : "Número de teléfono requerido.",
     };
 
-    setErrors(newErrors);
-
-    // Validación de contraseña: todas las reglas deben cumplirse
+    setErrors((prev) => ({ ...prev, ...step2Errors }));
     const passwordValid = Object.values(passwordRules).every((rule) => rule);
-    return Object.values(newErrors).every((err) => err === "") && passwordValid;
+
+    return (
+      Object.values(step2Errors).every((err) => err === "") && passwordValid
+    );
   };
 
-  const handleRegister = async () => {
-    if (!validateFields()) return;
-
-    setLoading(true);
-    try {
-      console.log(
-        "Registrando usuario:",
-        fullName,
-        email,
-        phonePrefix + phoneNumber
-      );
-
-      await login(email, password);
-      navigation.replace("Home");
-    } catch (error) {
-      console.error("Error en registro:", error);
-    } finally {
-      setLoading(false);
+  const handleNextStep = () => {
+    if (currentStep === 1) {
+      if (validateStep1()) {
+        setCurrentStep(2);
+      }
     }
   };
 
-  const handleGoBack = () => navigation.navigate("Login");
+  const handleRegister = async () => {
+    if (currentStep === 2) {
+      if (!validateStep2()) return;
+
+      setLoading(true);
+      try {
+        console.log(
+          "Registrando usuario:",
+          firstName,
+          lastName,
+          email,
+          phonePrefix + phoneNumber
+        );
+
+        await login(email, password);
+        navigation.replace("Home");
+      } catch (error) {
+        console.error("Error en registro:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleGoBack = () => {
+    if (currentStep === 2) {
+      setCurrentStep(1);
+    } else {
+      navigation.navigate("Login");
+    }
+  };
 
   return {
-    fullName,
-    setFullName,
+    currentStep,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    country,
+    setCountry,
     email,
     setEmail,
     password,
@@ -101,10 +143,11 @@ export const useRegisterLogic = () => {
     setPhonePrefix,
     phoneNumber,
     setPhoneNumber,
-    passwordRules, // ✅ Reglas individuales
+    passwordRules,
     loading,
     handleRegister,
     handleGoBack,
+    handleNextStep,
     errors,
   };
 };

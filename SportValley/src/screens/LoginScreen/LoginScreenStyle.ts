@@ -1,8 +1,8 @@
-// src/screens/Register/registerStyles.ts
+// src/screens/Login/loginStyles.ts
 import { StyleSheet } from "react-native";
 import { COLORS, FONTS, SCREEN, SPACING } from "../../styles/theme";
 
-export const registerStyles = StyleSheet.create({
+export const loginStyles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: "center",
@@ -13,16 +13,8 @@ export const registerStyles = StyleSheet.create({
   },
 
   logo: {
-    width: Math.min(SCREEN.width * 0.6, 280),
-    height: Math.min(SCREEN.width * 0.6, 280),
-    marginBottom: SPACING.lg,
-  },
-
-  title: {
-    fontSize: FONTS.xl,
-    fontWeight: "700",
-    color: COLORS.textPrimary,
-    textAlign: "center",
+    width: Math.min(SCREEN.width * 0.7, 300),
+    height: Math.min(SCREEN.width * 0.7, 300),
     marginBottom: SPACING.lg,
   },
 
@@ -31,14 +23,21 @@ export const registerStyles = StyleSheet.create({
     maxWidth: 400,
   },
 
-  loginText: {
-    marginTop: SPACING.lg,
+  orText: {
+    marginVertical: SPACING.md,
     fontSize: FONTS.md,
     color: COLORS.textSecondary,
     textAlign: "center",
   },
 
-  loginLink: {
+  registerText: {
+    marginTop: SPACING.md,
+    fontSize: FONTS.md,
+    color: COLORS.textSecondary,
+    textAlign: "center",
+  },
+
+  registerLink: {
     color: COLORS.secondary,
     fontWeight: "700",
   },

@@ -1,21 +1,33 @@
-import React from 'react';
-import { TouchableOpacity, Text, Image, View, StyleSheet, Platform, Dimensions } from 'react-native';
+import React from "react";
+import {
+  TouchableOpacity,
+  Text,
+  Image,
+  View,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+import { COLORS, FONTS, SPACING, RADIUS, SCREEN } from "../styles/theme";
 
 interface SocialButtonProps {
   label: string;
   icon: any;
-  backgroundColor: string;
+  backgroundColor?: string; // opcional, por defecto se usa COLORS.primary
   onPress?: () => void;
 }
 
 export const SocialButton: React.FC<SocialButtonProps> = ({
   label,
   icon,
-  backgroundColor,
+  backgroundColor = COLORS.primary,
   onPress,
 }) => {
   return (
-    <TouchableOpacity style={[styles.button, { backgroundColor }]} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor }]}
+      onPress={onPress}
+      activeOpacity={0.8}
+    >
       <View style={styles.content}>
         <Image source={icon} style={styles.icon} />
         <Text style={styles.label}>{label}</Text>
@@ -24,36 +36,33 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
   );
 };
 
-const { width } = Dimensions.get("window"); // Ancho de pantalla para adaptividad
+const { width } = SCREEN;
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   button: {
-    width: "100%", // Siempre ocupará todo el ancho disponible del contenedor
-    maxWidth: 400, // Evita que sea demasiado ancho en pantallas grandes (web)
-    paddingVertical: Platform.OS === "ios" ? 14 : 12, // Ajusta altura según SO
-    borderRadius: 10,
-    marginVertical: 6,
+    width: "100%",
+    maxWidth: 400,
+    paddingVertical: width < 400 ? SPACING.sm : SPACING.md,
+    borderRadius: RADIUS.md,
+    marginVertical: SPACING.xs,
     alignItems: "center",
-    flexDirection: "row", // Para alinear icono y texto en fila
+    flexDirection: "row",
     justifyContent: "center",
   },
-
   content: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-
   icon: {
-    width: width < 400 ? 18 : 22, // Tamaño del icono adaptativo
+    width: width < 400 ? 18 : 22,
     height: width < 400 ? 18 : 22,
-    marginRight: 10,
-    resizeMode: "contain", // Mantiene proporción del icono
+    marginRight: SPACING.sm,
+    resizeMode: "contain",
   },
-
   label: {
-    fontSize: width < 400 ? 14 : 16, // Texto más pequeño en pantallas pequeñas
-    color: "#fff", // Color por defecto, se puede sobrescribir con prop
+    fontSize: width < 400 ? FONTS.md : FONTS.lg,
+    color: COLORS.background, // blanco por defecto
     fontWeight: "600",
     textAlign: "center",
   },

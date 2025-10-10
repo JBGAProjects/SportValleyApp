@@ -1,7 +1,7 @@
-import React from 'react';
-import { AuthProvider } from './src/context/AuthContext';
-import AppNavigator from './src/navigation/AppNavigator';
-import { LogBox } from 'react-native';
+import React from "react";
+import { AuthProvider } from "./src/context/AuthContext";
+import AppNavigator from "./src/navigation/AppNavigator";
+import { LogBox } from "react-native";
 
 /**
  * App.tsx
@@ -13,7 +13,7 @@ import { LogBox } from 'react-native';
  */
 
 // Ignorar advertencias irrelevantes de Expo durante desarrollo
-LogBox.ignoreLogs(['Setting a timer', 'Remote debugger']);
+LogBox.ignoreLogs(["Setting a timer", "Remote debugger"]);
 
 /**
  * Componente principal de la app

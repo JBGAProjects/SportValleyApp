@@ -1,12 +1,12 @@
-
 // Importamos el hook con la lógica
 import React from "react";
 import { View, Text, Image, ScrollView } from "react-native";
 import { InputField } from "../../components/InputField";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { SocialButton } from "../../components/SocialButton";
-import { styles } from "../styles/LoginScreenStyle";
+import { loginStyles } from "./LoginScreenStyle";
 import { useLoginScreenLogic } from "./LoginScreenLogic";
+import { Logos } from "../../utils/constants/images";
 
 /**
  * Pantalla de Login
@@ -17,8 +17,15 @@ import { useLoginScreenLogic } from "./LoginScreenLogic";
  *
  */
 export const LoginScreen: React.FC = () => {
-  const { email, setEmail, password, setPassword, loading, handleLogin, handleRegister } =
-    useLoginScreenLogic(); // Conectamos la lógica del login
+  const {
+    email,
+    setEmail,
+    password,
+    setPassword,
+    loading,
+    handleLogin,
+    handleRegister,
+  } = useLoginScreenLogic(); // Conectamos la lógica del login
 
   // Iconos temporales (Google / Facebook)
   const googleIcon = {
@@ -32,16 +39,16 @@ export const LoginScreen: React.FC = () => {
   const tempLogo = require("../../../assets/logoApp.png");
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={loginStyles.container}>
       {/* Logo temporal de la app */}
       <Image
-        source={tempLogo}
-        style={styles.logo}
+        source={Logos.sportValley}
+        style={loginStyles.logo}
         resizeMode="contain" // Mantiene proporción del logo
       />
 
       {/* Formulario de login */}
-      <View style={styles.form}>
+      <View style={loginStyles.form}>
         {/* Inputs controlados por el hook */}
         <InputField
           placeholder="Correo electrónico"
@@ -65,7 +72,7 @@ export const LoginScreen: React.FC = () => {
       </View>
 
       {/* Separador */}
-      <Text style={styles.orText}>O continúa con</Text>
+      <Text style={loginStyles.orText}>O continúa con</Text>
 
       {/* Botones sociales (sin lógica aún) */}
       <SocialButton
@@ -82,9 +89,9 @@ export const LoginScreen: React.FC = () => {
       />
 
       {/* Enlace de registro */}
-      <Text style={styles.registerText}>
+      <Text style={loginStyles.registerText}>
         ¿No tienes cuenta?{" "}
-        <Text style={styles.registerLink} onPress={handleRegister}>
+        <Text style={loginStyles.registerLink} onPress={handleRegister}>
           Regístrate
         </Text>
       </Text>
