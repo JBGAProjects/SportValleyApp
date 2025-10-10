@@ -1,4 +1,4 @@
-// Importamos el hook con la lógica
+// LoginScreen.tsx
 import React from "react";
 import { View, Text, Image, ScrollView } from "react-native";
 import { InputField } from "../../components/InputField";
@@ -7,14 +7,15 @@ import { SocialButton } from "../../components/SocialButton";
 import { loginStyles } from "./LoginScreenStyle";
 import { useLoginScreenLogic } from "./LoginScreenLogic";
 import { Logos } from "../../utils/constants/images";
+import { useNavigation } from "@react-navigation/native";
 
 /**
  * Pantalla de Login
  *
- * Esta pantalla permite al usuario iniciar sesión con:
- * - Correo y contraseña (formulario clásico)
- * - Google o Facebook (aún sin lógica)
- *
+ * Permite al usuario iniciar sesión con:
+ * - Correo y contraseña
+ * - Google o Facebook
+ * - O recuperar contraseña
  */
 export const LoginScreen: React.FC = () => {
   const {
@@ -25,9 +26,12 @@ export const LoginScreen: React.FC = () => {
     loading,
     handleLogin,
     handleRegister,
+    handleForgotPassword,
   } = useLoginScreenLogic(); // Conectamos la lógica del login
 
-  // Iconos temporales (Google / Facebook)
+  const navigation = useNavigation();
+
+  // Iconos temporales
   const googleIcon = {
     uri: "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
   };
@@ -35,46 +39,48 @@ export const LoginScreen: React.FC = () => {
     uri: "https://cdn-icons-png.flaticon.com/512/124/124010.png",
   };
 
-  // Logo temporal de deportes
-  const tempLogo = require("../../../assets/logoApp.png");
-
   return (
     <ScrollView contentContainerStyle={loginStyles.container}>
-      {/* Logo temporal de la app */}
+      {/* Logo */}
       <Image
         source={Logos.sportValley}
         style={loginStyles.logo}
-        resizeMode="contain" // Mantiene proporción del logo
+        resizeMode="contain"
       />
 
-      {/* Formulario de login */}
+      {/* Formulario */}
       <View style={loginStyles.form}>
-        {/* Inputs controlados por el hook */}
         <InputField
           placeholder="Correo electrónico"
           keyboardType="email-address"
           value={email}
-          onChangeText={setEmail} // Actualiza estado email
+          onChangeText={setEmail}
         />
+
         <InputField
           placeholder="Contraseña"
           secureTextEntry
           value={password}
-          onChangeText={setPassword} // Actualiza estado password
+          onChangeText={setPassword}
         />
+
+        {/* Link de recuperar contraseña */}
+        <Text style={loginStyles.forgotPassword} onPress={handleForgotPassword}>
+          ¿Has olvidado la contraseña?
+        </Text>
 
         {/* Botón de login */}
         <PrimaryButton
           label={loading ? "Cargando..." : "Iniciar sesión"}
-          onPress={handleLogin} // Llama al login mock
-          disabled={loading} // Evita múltiples clicks mientras carga
+          onPress={handleLogin}
+          disabled={loading}
         />
       </View>
 
       {/* Separador */}
       <Text style={loginStyles.orText}>O continúa con</Text>
 
-      {/* Botones sociales (sin lógica aún) */}
+      {/* Botones sociales */}
       <SocialButton
         label="Google"
         icon={googleIcon}

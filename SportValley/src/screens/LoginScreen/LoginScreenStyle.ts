@@ -41,4 +41,12 @@ export const loginStyles = StyleSheet.create({
     color: COLORS.secondary,
     fontWeight: "700",
   },
+
+  forgotPassword: {
+    color: COLORS.secondary,
+    textAlign: "right",
+    fontSize: FONTS.sm,
+    marginBottom: SPACING.md,
+    textDecorationLine: "underline",
+  },
 });

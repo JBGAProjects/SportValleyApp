@@ -33,6 +33,10 @@ export const useLoginScreenLogic = () => {
     navigation.navigate("Register");
   };
 
+  const handleForgotPassword = () => {
+    navigation.navigate("forgotPassword");
+  };
+
   return {
     email,
     setEmail,
@@ -41,5 +45,6 @@ export const useLoginScreenLogic = () => {
     loading,
     handleLogin,
     handleRegister,
+    handleForgotPassword,
   };
 };
